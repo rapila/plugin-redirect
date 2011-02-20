@@ -1,0 +1,38 @@
+Widget.types.page_type.types['redirect'] = {
+	handle_preview: function(page_id, page_type) {
+		// Should never reach this
+	},
+		
+	handle_admin: function(page_id, container, page_type) {
+		var edit = jQuery.parseHTML('{{includeTemplate=edit}}').appendTo(container);
+		edit.submit(function() {
+			return false;
+		});
+		var external = edit.find('input[name="external"]'), internal;
+		var internal_wrapper = edit.find('.internal-location');
+		Widget.createWithElement('page_input', function(widget) {
+			internal = widget._element;
+			internal.attr('name', 'internal');
+			internal_wrapper.append(internal);
+			page_type.callPageTypeMethod('adminLoad', function(result) {
+				if(result.type === 'internal') {
+					internal.val(result.value);
+				} else {
+					external.val(result.value).change();
+				}
+			});
+		});
+		external.change(function() {
+			if(!external.val()) {
+				internal_wrapper.show();
+			} else {
+				internal_wrapper.hide();
+			}
+		});
+	},
+	
+	did_save: function(page_id, container, page_type) {
+		var edit = container.children('form');
+		page_type.callPageTypeMethod('adminSave', edit.serializeArrayKV());
+	}
+};
