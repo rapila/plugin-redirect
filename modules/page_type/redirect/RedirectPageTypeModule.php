@@ -4,8 +4,8 @@ class RedirectPageTypeModule extends PageTypeModule {
 	
 	protected $sLanguageId;
 	
-	public function __construct(Page $oPage, $sLanguageId = null) {
-		parent::__construct($oPage);
+	public function __construct(Page $oPage = null, NavigationItem $oNavigationItem = null, $sLanguageId = null) {
+		parent::__construct($oPage, $oNavigationItem);
 		if($sLanguageId == null) {
 			$sLanguageId = Session::language();
 		}
@@ -15,7 +15,7 @@ class RedirectPageTypeModule extends PageTypeModule {
 	public function display(Template $oTemplate, $bIsPreview = false) {
 		$sValue = $this->oPage->getPagePropertyValue('redirect-location-'.$this->sLanguageId, '');
 		if(is_numeric($sValue)) {
-			$this->oPage = PagePeer::retrieveByPK($sValue);
+			$this->oPage = PageQuery::create()->findPk($sValue);
 			LinkUtil::redirect(LinkUtil::link($this->oPage->getFullPathArray()));
 		} else if(!$sValue) {
 			throw new Exception('Error in RedirectPageTypeModule->display(): no redirect location set');
@@ -28,9 +28,8 @@ class RedirectPageTypeModule extends PageTypeModule {
 		$sValue = $aChosenOptions['external'];
 		if(!$aChosenOptions['external']) {
 			$sValue = $aChosenOptions['internal'];
-			PagePeer::retrieveByPK($sValue);
 			//TODO: remove outdated references (and when changing page types)
-			ReferencePeer::addReference($this, $sValue);
+			ReferencePeer::addReference($this->oPage, PageQuery::create()->findPk($sValue));
 		}
 		$this->oPage->updatePageProperty('redirect-location-'.$this->sLanguageId, $sValue);
 	}
