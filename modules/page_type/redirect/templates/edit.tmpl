@@ -1,6 +1,8 @@
 <form>
-	External location: <input name="external" type="url" />
+	<div class="group_items">
+		<label for="external">{{writeString=redirect.to_external}}</label>
+		<input name="external" type="url" class="ui-widget-content" />
 	<div class="internal-location">
-		Internal location: 
+		<label for="internal">{{writeString=redirect.to_internal}}</label>
 	</div>
 </form>
