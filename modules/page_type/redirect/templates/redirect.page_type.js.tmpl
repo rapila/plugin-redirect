@@ -4,7 +4,7 @@ Widget.types.page_type.types['redirect'] = {
 	},
 		
 	handle_admin: function(page_id, container, page_type) {
-		var edit = jQuery.parseHTML('{{includeTemplate=edit}}').appendTo(container);
+		var edit = Widget.parseHTML('{{includeTemplate=edit}}').appendTo(container);
 		edit.submit(function() {
 			return false;
 		});
