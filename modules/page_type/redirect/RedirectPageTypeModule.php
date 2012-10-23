@@ -2,18 +2,12 @@
 
 class RedirectPageTypeModule extends PageTypeModule {
 	
-	protected $sLanguageId;
-	
-	public function __construct(Page $oPage = null, NavigationItem $oNavigationItem = null, $sLanguageId = null) {
+	public function __construct(Page $oPage = null, NavigationItem $oNavigationItem = null) {
 		parent::__construct($oPage, $oNavigationItem);
-		if($sLanguageId == null) {
-			$sLanguageId = Session::language();
-		}
-		$this->sLanguageId = $sLanguageId;
 	}
 	
 	public function display(Template $oTemplate, $bIsPreview = false) {
-		$sValue = $this->oPage->getPagePropertyValue('redirect-location-'.$this->sLanguageId, '');
+		$sValue = $this->oPage->getPagePropertyValue('redirect-location', '');
 		if(is_numeric($sValue)) {
 			$this->oPage = PageQuery::create()->findPk($sValue);
 			LinkUtil::redirect(LinkUtil::link($this->oPage->getFullPathArray()));
@@ -31,12 +25,12 @@ class RedirectPageTypeModule extends PageTypeModule {
 			//TODO: remove outdated references (and when changing page types)
 			ReferencePeer::addReference($this->oPage, PageQuery::create()->findPk($sValue));
 		}
-		$this->oPage->updatePageProperty('redirect-location-'.$this->sLanguageId, $sValue);
+		$this->oPage->updatePageProperty('redirect-location', $sValue);
 	}
 	
 	public function adminLoad() {
 		$aResult = array('type' => 'external');
-		$aResult['value'] = $this->oPage->getPagePropertyValue('redirect-location-'.$this->sLanguageId, '');
+		$aResult['value'] = $this->oPage->getPagePropertyValue('redirect-location', '');
 		if(is_numeric($aResult['value'])) {
 			$aResult['type'] = 'internal';
 		}
