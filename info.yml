@@ -1,0 +1,7 @@
+name: rapila-redirect-plugin
+repository:
+    - {type: git, url: 'git://github.com/rapila/plugin-redirect.git'}
+author: Rapila Team
+license: 'MIT'
+dependencies:
+    base: '*'
