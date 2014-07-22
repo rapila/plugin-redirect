@@ -1,11 +1,15 @@
 <?php
 
 class RedirectPageTypeModule extends PageTypeModule {
-	
+
 	public function __construct(Page $oPage = null, NavigationItem $oNavigationItem = null) {
 		parent::__construct($oPage, $oNavigationItem);
 	}
-	
+
+	public static function doIndex() {
+		return false;
+	}
+
 	public function display(Template $oTemplate, $bIsPreview = false) {
 		$sValue = $this->oPage->getPagePropertyValue('redirect-location', '');
 		if(is_numeric($sValue)) {
@@ -16,7 +20,7 @@ class RedirectPageTypeModule extends PageTypeModule {
 		}
 		LinkUtil::redirect($sValue, false);
 	}
-	
+
 	public function adminSave($aChosenOptions) {
 		ArrayUtil::trimStringsInArray($aChosenOptions);
 		$sValue = $aChosenOptions['external'];
@@ -27,7 +31,7 @@ class RedirectPageTypeModule extends PageTypeModule {
 		}
 		$this->oPage->updatePageProperty('redirect-location', $sValue);
 	}
-	
+
 	public function adminLoad() {
 		$aResult = array('type' => 'external');
 		$aResult['value'] = $this->oPage->getPagePropertyValue('redirect-location', '');
