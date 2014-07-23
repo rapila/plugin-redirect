@@ -6,7 +6,7 @@ class RedirectPageTypeModule extends PageTypeModule {
 		parent::__construct($oPage, $oNavigationItem);
 	}
 
-	public static function doIndex() {
+	public static function doIndex($oNavigationItem) {
 		return false;
 	}
 
