@@ -14,7 +14,7 @@ class RedirectPageTypeModule extends PageTypeModule {
 		$sValue = $this->oPage->getPagePropertyValue('redirect-location', '');
 		if(is_numeric($sValue)) {
 			$this->oPage = PageQuery::create()->findPk($sValue);
-			LinkUtil::redirect(LinkUtil::link($this->oPage->getFullPathArray()));
+			LinkUtil::redirect(LinkUtil::link($this->oPage->getFullPathArray()), null, 'default', false);
 		} else if(!$sValue) {
 			throw new Exception('Error in RedirectPageTypeModule->display(): no redirect location set');
 		}
