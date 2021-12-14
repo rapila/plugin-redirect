@@ -8,26 +8,24 @@ Widget.types.page_type.types['redirect'] = {
 		edit.submit(function() {
 			return false;
 		});
-		var external = edit.find('input[name="external"]'), internal;
+		var external = edit.find('input[name="external"]');
 		var internal_wrapper = edit.find('.internal-location');
 		Widget.createWithElement('page_input', function(widget) {
-			internal = widget._element;
-			internal.attr('name', 'internal');
-			internal_wrapper.append(internal);
+			widget.handle('element_set', function(event, element) {
+				internal_wrapper.append(element);
+				element.attr('name', 'internal');
+			});
+		}, function(widget) {
 			page_type.callPageTypeMethod('adminLoad', function(result) {
 				if(result.type === 'internal') {
-					internal.val(result.value);
+					widget.value(result.value);
 				} else {
 					external.val(result.value).change();
 				}
 			});
 		});
 		external.change(function() {
-			if(!external.val()) {
-				internal_wrapper.show();
-			} else {
-				internal_wrapper.hide();
-			}
+			internal_wrapper.toggle(!external.val());
 		});
 	},
 	
